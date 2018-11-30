@@ -1,0 +1,28 @@
+1. 获取手机当前webview
+	adb.exe -P 5037 -s bdb6c403 shell cat /proc/net/unix |findstr webview
+
+	0000000000000000: 00000002 00000000 00010000 0001 01 1801948 @webview_devtools_remote_5560
+	
+2. 通过进程号5560找到相关进程
+   ps 5560 对应的包名com.autotest.zy.app 合并为 WEBVIEW_com.autotest.zy.app,NATIVE_APP
+
+3. 查看android 手机webview版本
+	chromedriver.exe --url-base=wd/hub --port=8000 --adb-port=5037 --verbose  手动启动
+	adb forward tcp:5000 localabstract:webview_devtools_remote_11798
+	curl localhost:5000/json/version
+	{
+	   "Android-Package": "com.autotest.zy.app",
+	   "Browser": "Chrome/62.0.3202.84",
+	   "Protocol-Version": "1.2",
+	   "User-Agent": "Mozilla/5.0 (Linux; Android 7.1.1; OS105 Build/NGI77B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/62.0.3202.84 Mobile Safari/537.36",
+	   "V8-Version": "6.2.414.37",
+	   "WebKit-Version": "537.36 (@957d898f0f6e46cd9661d91d2bae899f34c1c4b6)",
+	   "webSocketDebuggerUrl": "ws://localhost:5000/devtools/browser"
+	}
+		
+4. 启动chromdriver
+	chromedriver.exe --url-base=wd/hub --port=8000 --adb-port=5037 --verbose
+	
+5 获取webview版本
+	pm dump com.google.android.webview |grep version
+	
